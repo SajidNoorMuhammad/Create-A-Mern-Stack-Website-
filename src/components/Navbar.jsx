@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useContext(AuthContext)
 
   return (
     <nav className="bg-indigo-600">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <a href="#" className="text-xl font-bold text-white">
-          BrandLogo
+          {user? user.fullname : "Guest"}
         </a>
 
         {/* Desktop Menu */}

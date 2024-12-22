@@ -23,12 +23,20 @@ const Course = () => {
             })
             .then((res) => {
                 console.log(res.data);
-                setCourse(res.data);
+                if (Array.isArray(res.data.data)) {
+                    setCourse(res.data.data); // Set the 'data' property as the course array
+                } else {
+                    console.error('API did not return a valid array:', res.data);
+                    setCourse([]); // Fallback to an empty array
+                }
             })
             .catch((err) => {
                 console.error(err);
             });
     };
+
+
+
 
     const handleAddCourse = () => {
         axios
@@ -58,13 +66,12 @@ const Course = () => {
 
             <button
                 onClick={() => {
-                    Cookies.set("token", null)
-                    setUser(null)
-
+                    Cookies.set('token', null);
+                    setUser(null);
                 }}
                 className="bg-indigo-600 ml-10 text-white px-4 py-2 rounded hover:bg-indigo-700"
             >
-                LogOut
+                Log Out
             </button>
 
             {/* Modal */}
@@ -118,6 +125,27 @@ const Course = () => {
                     </div>
                 </div>
             )}
+
+            {/* Course List */}
+            <div className="mt-6 flex">
+                {Array.isArray(course) && course.length > 0 ? (
+                    course.map((courseItem) => (
+                        <div key={courseItem.id} className="border p-4 mb-4 w-full rounded shadow">
+                            <h2 className="text-lg font-bold">{courseItem.title}</h2>
+                            <p className="text-sm text-gray-700">{courseItem.description}</p>
+                            {courseItem.thumbnail && (
+                                <img
+                                    src={courseItem.thumbnail}
+                                    alt={`${courseItem.title} Thumbnail`}
+                                    className="mt-2 w-[200px] h-auto rounded"
+                                />
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-gray-500">No courses available.</p>
+                )}
+            </div>
         </div>
     );
 };
